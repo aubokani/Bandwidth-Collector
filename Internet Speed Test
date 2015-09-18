@@ -1,0 +1,81 @@
+<html>
+<head>
+
+<script src="//www.parsecdn.com/js/parse-1.5.0.min.js"></script>
+<script type="text/javascript">
+Parse.initialize("Fgs8qIIurj4m1CFnZE6HJ2nnhHAKAElTKewoR0iT", "LtYvmwmBtcDiFGm8MYDupsruVpVK1ANLbvCtRIz3");
+function runBW(){	
+	var fileURL = "http://www.cse.unsw.edu.au/~abokani/images/img/logo4.jpg";
+	var request = new XMLHttpRequest();
+	var avoidCache = "?avoidcache=" + (new Date()).getTime();;
+	request.open('GET', fileURL + avoidCache, true);
+	//request.responseType = "application/zip";
+	var startTime = (new Date()).getTime();
+	var endTime = startTime;
+	request.onreadystatechange = function () {
+		if (request.readyState == 2)
+		{
+			//ready state 2 is when the request is sent
+			startTime = (new Date().getTime());
+		}
+		if (request.readyState == 4)
+		{
+			endTime = (new Date()).getTime();
+		    //var downloadSize = request.responseText.length;		
+			//var downloadSize = 307605; //bytes (for logo1 image)
+			//var downloadSize = 141095; //bytes (for logo2 image)		
+			//var downloadSize = 89255; //bytes (for logo3 image)
+			var downloadSize = 66038; //bytes (for logo4 image)	
+			
+			var time = (endTime - startTime) / 1000;
+			var sizeInBits = downloadSize * 8;
+			var speedBps = (sizeInBits / time).toFixed(2);
+			var speedKbps = (speedBps / 1024).toFixed(2);
+			var speedMbps = (speedKbps / 1024).toFixed(2);
+			
+			var TestObject = Parse.Object.extend("BW_3G");
+			var testObject = new TestObject();
+
+			var startDownload=(startTime / 1000).toFixed(0)
+			var endDownload=(endTime / 1000).toFixed(0)
+			
+			testObject.set("End", endDownload);
+			testObject.set("Start", startDownload);		
+			testObject.set("Duration", time);
+			testObject.save({BW_Kbps: speedKbps}).then(function(object) {
+			});
+			
+			document.getElementById("demo0").innerHTML = "Downloading Duration=  " + time + " second";
+			document.getElementById("demo1").innerHTML = "Bps=  " + speedBps;
+			document.getElementById("demo2").innerHTML = "Kbps=  " + speedKbps;
+			document.getElementById("demo3").innerHTML = "Mbps=  " + speedMbps;
+		}
+		Enlarge()  		
+	}
+	request.send();
+}
+</script>
+</head>
+<body >
+<p id="demo"><font size="8">Internet Speed Test</font></p>
+<p id="demo0"></p>
+<p id="demo1"></p>
+<p id="demo2"></p>
+<p id="demo3"></p>
+
+<script>
+setInterval(runBW, 1000);
+function Enlarge() {    
+	document.getElementById("demo1").style.fontSize = "x-large";
+	document.getElementById("demo2").style.fontSize = "x-large";
+	document.getElementById("demo3").style.fontSize = "x-large";	
+}
+
+
+</script>
+
+
+
+
+</body>
+</html>
